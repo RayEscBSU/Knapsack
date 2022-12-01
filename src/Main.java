@@ -1,14 +1,22 @@
 import jdk.jfr.StackTrace;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        int numItems;
-        int maxWeight;
+        int numItems = 0;
+        int maxWeight = 0;
         String weight = null;
         String value= null;
         int debugLevel =0;
+        BufferedReader br;
+        List<Integer> wList;
+        List<Integer> vList;
 
         if (args.length >0){
             try{
@@ -21,12 +29,20 @@ public class Main {
                 throw new IllegalArgumentException(e);
             }
         }
+        wList = new ArrayList<>(numItems);
+        vList= new ArrayList<>(numItems);
+
         try{
             File wFile= new File (weight);
             File vFile = new File (value);
-        } catch (NullPointerException e) {
-            System.out.print("NullPointerException Caught");
+            br = new BufferedReader(new FileReader(wFile));
+
+        } catch (IOException e) {
+            System.out.print("Exception Caught");
+            e.printStackTrace();
         }
+
+
 
 
     }
