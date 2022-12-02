@@ -2,13 +2,15 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+    private static BufferedReader br;
+    private static Scanner scan;
     public static void main(String[] args) {
         int numItems = 0;
         int maxWeight = 0;
         String weight = null;
         String value = null;
         int debugLevel = 0;
-        BufferedReader br;
+
         int[] wArray;
         int[] vArray;
 
@@ -38,33 +40,27 @@ public class Main {
 
         wArray = new int[numItems];
         vArray = new int[numItems];
-
-        int lineW;
-        int lineV;
-        int line =0;
+        int lines;
 
         File wFile= new File (weight);
         File vFile = new File (value);
 
         try {
-            Scanner scan = new Scanner(wFile);
-            String x = null;
-            while (scan.hasNextLine()){
-                if(scan.hasNextInt()){
-                    wArray[line] = scan.nextInt();
-                    line++;
-                }
-            }
-            scan.close();
-            line=0;
-            scan = new Scanner(vFile);
-            while (scan.hasNextLine()){
-                if(scan.hasNextInt()){
-                    vArray[line] = scan.nextInt();
-                    line++;
-                }
-            }
+           lines= compareFiles(wFile,vFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        BufferedReader br2;
+        try {
+           br = new BufferedReader(new FileReader(wFile));
+           br2 = new BufferedReader(new FileReader(vFile));
+           for (int i =0; i< lines; i++){
+               wArray[i]=Integer.parseInt(br.readLine());
+               vArray[i]=Integer.parseInt(br2.readLine());
+           }
         } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -78,5 +74,34 @@ public class Main {
                 + "w.text: File containing itme's weight\n" + "v.txt: File containing item's value\n"
                 + "[<debug level>]: 0 - default, 1 - print to files\n"
         );
+    }
+
+    private static int compareFiles(File x, File y) throws IOException {
+        int countX = 0;
+        int countY= 0;
+        int count=0;
+        scan = new Scanner(x);
+
+        try (BufferedReader br = new BufferedReader(new FileReader(x))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                countX++;
+            }
+        }
+        try (BufferedReader br = new BufferedReader(new FileReader(y))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                countY++;
+            }
+        }
+        if (countX != countY){
+            System.out.println("Files do not contain equal amounts of weight and value items");
+            System.out.println("File " + x + "lines: " + countX + "File " + y + "lines: " + countY );
+            System.exit(1);
+        }
+        else {
+            count = countX;
+        }
+        return count ;
     }
 }
