@@ -63,6 +63,15 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        for (int i =0; i< lines; i++){
+            System.out.print( wArray[i] +" ");
+
+        }
+        System.out.println("");
+        for (int i =0; i< lines; i++){
+            System.out.print( vArray[i]+ " ");
+        }
+
 
         System.out.println("done");
 
