@@ -1,7 +1,7 @@
 import java.io.*;
-import java.util.*;
+import java.net.StandardSocketOptions;
 
-public class Main {
+public class KnapsackBU {
     private static int[] wArray;
     private static int[] vArray;
     private static File wFile;
@@ -63,10 +63,35 @@ public class Main {
         }
         System.out.println(" ");
 
-
+        sackBU(numItems, wArray, vArray, maxWeight);
         System.out.println("********done**********");
 
     }
+    private static int[][] sackBU(int n, int[] w, int[]v, int maxSize){
+
+
+        int[][] temp= new int [n+1][maxSize+1];
+
+
+
+        for(int i=1; i<=n;i++){
+            for(int c =1; c<=maxSize; c++){
+                if(w[i-1] >c ){
+                    temp[i][c] = temp[i-1][c];
+                }else {
+                    temp[i][c] = Math.max(temp[i-1][c],v[i-1]+temp[i-1][c-w[i-1]]);
+                }
+            }
+        }
+        for(int i = 0; i < temp.length; i++){
+            for(int j = 0; j < temp[0].length;j++){
+                System.out.print(temp[i][j]+" ");
+            }
+            System.out.println();
+        }
+        return temp;
+    }
+
 
 
     private static void Usage() {
