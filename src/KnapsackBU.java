@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.StandardSocketOptions;
+import java.util.ArrayList;
 
 public class KnapsackBU {
     private static int[] wArray;
@@ -7,6 +8,11 @@ public class KnapsackBU {
     private static File wFile;
     private static File vFile;
     private static int lineCount;
+
+    private static int result;
+
+    private static int [][] table;
+    private static ArrayList<Integer> list= new ArrayList<>();
 
     public static void main(String[] args) {
         int numItems = 0;
@@ -59,11 +65,30 @@ public class KnapsackBU {
         }
         System.out.println("");
         for (int i = 0; i < lineCount; i++) {
-            System.out.print(vArray[i] + " ");
+            System.out.print(vArray[i] + " ");//        System.out.println(result);
+
         }
         System.out.println(" ");
 
-        sackBU(numItems, wArray, vArray, maxWeight);
+        table = sackBU(numItems, wArray, vArray, maxWeight);
+        for(int i = 0; i < table.length; i++){
+            for(int j = 0; j < table[0].length;j++){
+                System.out.print(table[i][j]+" ");
+            }
+            System.out.println();
+
+        }
+        int[][] arr = sackFind(numItems, wArray, vArray, maxWeight,table);
+
+
+        for(int x = 0; x < arr.length; x++){
+            for(int y = 0; y< arr[0].length;y++){
+                System.out.print(arr[x][y]+" ");
+            }
+            System.out.println();
+        }
+
+        System.out.println(list);
         System.out.println("********done**********");
 
     }
@@ -83,13 +108,36 @@ public class KnapsackBU {
                 }
             }
         }
-        for(int i = 0; i < temp.length; i++){
-            for(int j = 0; j < temp[0].length;j++){
-                System.out.print(temp[i][j]+" ");
-            }
-            System.out.println();
-        }
+
         return temp;
+    }
+
+    private static int[][] sackFind(int n, int[] w, int[]v, int maxSize, int[][] arr){
+         int[][] findArr =  new int [n+1][maxSize+1];
+        int i = n;
+        int j = maxSize;
+        System.out.println("");
+//
+//        for(int x = 0; x < arr.length; x++){
+//            for(int y = 0; y< arr[0].length;y++){
+//                System.out.print(arr[i][j]+" ");
+//            }
+//            System.out.println();
+//        }
+        while(i >0 && j > 0 ){
+            if(arr[i][j] != arr[i-1][j]){
+                findArr[i][j] = 1;
+                list.add(i);
+                i = i-1;
+                j=j-w[i];
+            }
+            else {
+                i=i-1;
+            }
+        }
+
+
+        return findArr;
     }
 
 
