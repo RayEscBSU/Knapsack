@@ -1,5 +1,4 @@
 import java.io.*;
-import java.net.StandardSocketOptions;
 import java.util.ArrayList;
 
 public class KnapsackTD {
@@ -65,7 +64,7 @@ public class KnapsackTD {
         }
         System.out.println("");
         for (int i = 0; i < lineCount; i++) {
-            System.out.print(vArray[i] + " ");//        System.out.println(result);
+            System.out.print(vArray[i] + " ");
 
         }
         System.out.println(" ");
@@ -98,7 +97,7 @@ public class KnapsackTD {
 
 
     private static int[][] sackTD(int n, int[] w, int[] v,int maxSize) {
-        int[][] newArr = new int[n][maxSize];
+        int[][] newArr = new int[n+1][maxSize+1];
             for (int i = 1; i < newArr.length; i++) {
                 for (int j = 1; j < newArr[i].length; j++) {
                     newArr[i][j] = -1;
@@ -178,18 +177,9 @@ public class KnapsackTD {
         int countY = 0;
         lineCount = 0;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(x))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                countX++;
-            }
-        }
-        try (BufferedReader br = new BufferedReader(new FileReader(y))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                countY++;
-            }
-        }
+        countX = fileLineCount(x);
+        countY = fileLineCount(y);
+
         if (countX != countY) {
             System.out.println("Files do not contain equal amounts of weight and value items");
             System.out.println("File " + x + "lines: " + countX + "File " + y + "lines: " + countY);
@@ -209,4 +199,19 @@ public class KnapsackTD {
             }
         }
     }
+    private static int fileLineCount(File x){
+        int c=0;
+        try (BufferedReader br = new BufferedReader(new FileReader(x))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                c++;
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return c;
+    }
+
 }
