@@ -1,6 +1,8 @@
 import java.io.*;
 import java.net.StandardSocketOptions;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class KnapsackBU {
     private static int[] wArray;
@@ -9,7 +11,7 @@ public class KnapsackBU {
     private static File vFile;
     private static int lineCount;
 
-    private static int result;
+    private static int optVal;
 
     private static int [][] table;
     private static ArrayList<Integer> list= new ArrayList<>();
@@ -58,47 +60,57 @@ public class KnapsackBU {
             throw new RuntimeException(e);
         }
 
-        //print out array
-        for (int i = 0; i < lineCount; i++) {
-            System.out.print(wArray[i] + " ");
+//        //print out array
+//        for (int i = 0; i < lineCount; i++) {
+//            System.out.print(wArray[i] + " ");
+//
+//        }
+//        System.out.println("");
+//        for (int i = 0; i < lineCount; i++) {
+//            System.out.print(vArray[i] + " ");;
+//
+//        }
 
-        }
-        System.out.println("");
-        for (int i = 0; i < lineCount; i++) {
-            System.out.print(vArray[i] + " ");//        System.out.println(result);
-
-        }
         System.out.println(" ");
 
+//        System.out.println(result)
         table = sackBU(numItems, wArray, vArray, maxWeight);
-        for(int i = 0; i < table.length; i++){
-            for(int j = 0; j < table[0].length;j++){
-                System.out.print(table[i][j]+" ");
-            }
-            System.out.println();
-
-        }
+        optVal = table[table.length - 1][table[table.length-1].length - 1];
         int[][] arr = sackFind(numItems, wArray, vArray, maxWeight,table);
 
+        if(debugLevel == 1){
 
-        for(int x = 0; x < arr.length; x++){
-            for(int y = 0; y< arr[0].length;y++){
-                System.out.print(arr[x][y]+" ");
+            for(int i = 0; i < table.length; i++){
+                for(int j = 0; j < table[0].length;j++){
+                    System.out.print(table[i][j]+" ");
+                }
+                System.out.println();
             }
-            System.out.println();
+
+
+            System.out.println("\n" + "KnapsackDP-DTable:" +"");
+
+            //DTable
+            for(int x = 0; x < arr.length; x++){
+                for(int y = 0; y< arr[0].length;y++){
+                    System.out.print(arr[x][y]+" ");
+                }
+                System.out.println();
+            }
+
+
         }
 
-        System.out.println(list);
+        System.out.println("Optimal solution:" + "\n" + list);
+        System.out.println("Total Weight: "+ maxWeight);
+        System.out.println("Optimal Value: " + optVal);
+        System.out.println("Number of table references: ");
+
         System.out.println("********done**********");
 
     }
     private static int[][] sackBU(int n, int[] w, int[]v, int maxSize){
-
-
         int[][] temp= new int [n+1][maxSize+1];
-
-
-
         for(int i=1; i<=n;i++){
             for(int c =1; c<=maxSize; c++){
                 if(w[i-1] >c ){
@@ -108,7 +120,6 @@ public class KnapsackBU {
                 }
             }
         }
-
         return temp;
     }
 
@@ -135,8 +146,7 @@ public class KnapsackBU {
                 i=i-1;
             }
         }
-
-
+        Collections.reverse(list);
         return findArr;
     }
 
@@ -149,7 +159,6 @@ public class KnapsackBU {
                 + "[<debug level>]: 0 - default, 1 - print to files\n"
         );
     }
-
     private static void compareFiles(File x, File y) throws IOException {
         BufferedReader br1;
         BufferedReader br2;
@@ -157,25 +166,16 @@ public class KnapsackBU {
         int countY = 0;
         lineCount = 0;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(x))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                countX++;
-            }
-        }
-        try (BufferedReader br = new BufferedReader(new FileReader(y))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                countY++;
-            }
-        }
+        countX = fileLineCount(x);
+        countY = fileLineCount(y);
+
         if (countX != countY) {
             System.out.println("Files do not contain equal amounts of weight and value items");
             System.out.println("File " + x + "lines: " + countX + "File " + y + "lines: " + countY);
             System.exit(1);
         } else {
             lineCount = countX;
-            if(wArray.length != lineCount){
+            if (wArray.length != lineCount) {
                 System.out.println("The number of items entered  does not match number of items in files");
                 System.out.println("You enterd n: " + wArray.length + ", number of items in file: " + lineCount);
                 System.exit(1);
@@ -187,5 +187,19 @@ public class KnapsackBU {
                 vArray[i] = Integer.parseInt(br2.readLine());
             }
         }
+    }
+    private static int fileLineCount(File x){
+        int c=0;
+        try (BufferedReader br = new BufferedReader(new FileReader(x))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                c++;
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return c;
     }
 }

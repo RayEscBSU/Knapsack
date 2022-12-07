@@ -140,13 +140,7 @@ public class KnapsackTD {
         int i = n;
         int j = maxSize;
         System.out.println("");
-//
-//        for(int x = 0; x < arr.length; x++){
-//            for(int y = 0; y< arr[0].length;y++){
-//                System.out.print(arr[i][j]+" ");
-//            }
-//            System.out.println();
-//        }
+
         while (i > 0 && j > 0) {
             if (arr[i][j] != arr[i - 1][j]) {
                 findArr[i][j] = 1;
