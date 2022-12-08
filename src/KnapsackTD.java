@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class KnapsackTD {
     private static int[] wArray;
@@ -8,9 +9,11 @@ public class KnapsackTD {
     private static File vFile;
     private static int lineCount;
 
-    private static int result;
+    private static int optVal;
+    private static int ref;
 
     private static int[][] table;
+    private static int[][] fTable;
     private static ArrayList<Integer> list = new ArrayList<>();
 
     public static void main(String[] args) {
@@ -57,41 +60,34 @@ public class KnapsackTD {
             throw new RuntimeException(e);
         }
 
-        //print out array
-        for (int i = 0; i < lineCount; i++) {
-            System.out.print(wArray[i] + " ");
 
-        }
-        System.out.println("");
-        for (int i = 0; i < lineCount; i++) {
-            System.out.print(vArray[i] + " ");
+         table =  sackTD(numItems,wArray,vArray,maxWeight );
+        optVal = table[table.length - 1][table[table.length-1].length - 1];
+        int[][] arr = sackFind(numItems, wArray, vArray,maxWeight,table);
 
-        }
-        System.out.println(" ");
-
-      //  table = sackBU(numItems, wArray, vArray, maxWeight);
-
-      table =  sackTD(numItems,wArray,vArray,maxWeight );
-
-        for (int i = 0; i < table.length; i++) {
-            for (int j = 0; j < table[0].length; j++) {
-                System.out.print(table[i][j] + " ");
+        if(debugLevel == 1){
+            System.out.println("KnapsackDP-VTable:" + "");
+            for(int i = 0; i < table.length; i++){
+                for(int j = 0; j < table[0].length;j++){
+                    System.out.print(table[i][j]+" ");
+                }
+                System.out.println();
             }
-            System.out.println();
 
-        }
-        int[][] arr = sackFind(numItems, wArray, vArray, maxWeight, table);
-
-
-        for (int x = 0; x < arr.length; x++) {
-            for (int y = 0; y < arr[0].length; y++) {
-                System.out.print(arr[x][y] + " ");
+            System.out.println("\n" + "KnapsackDP-DTable:" +"");
+            //DTable
+            for(int x = 0; x < arr.length; x++){
+                for(int y = 0; y< arr[0].length;y++){
+                    System.out.print(arr[x][y]+" ");
+                }
+                System.out.println();
             }
-            System.out.println();
         }
 
-        System.out.println(list);
-        System.out.println("********done**********");
+        System.out.println("Optimal solution:" + "\n" + list);
+        System.out.println("Total Weight: "+ maxWeight);
+        System.out.println("Optimal Value: " + optVal);
+        System.out.println("Number of table references: " + ref);
 
     }
 
@@ -117,6 +113,7 @@ public class KnapsackTD {
         else {
             finTable[row][col] = Math.max(cal(row-1, col, v, w, finTable), v[row-1] + cal(row-1, col-w[row-1], v, w, finTable));
         }
+
         return finTable[row][col];
     }
 
@@ -152,7 +149,7 @@ public class KnapsackTD {
             }
         }
 
-
+        Collections.reverse(list);
         return findArr;
     }
 

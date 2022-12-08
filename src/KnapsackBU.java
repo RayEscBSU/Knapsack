@@ -12,6 +12,7 @@ public class KnapsackBU {
     private static int lineCount;
 
     private static int optVal;
+    private static int ref;
 
     private static int [][] table;
     private static ArrayList<Integer> list= new ArrayList<>();
@@ -22,7 +23,6 @@ public class KnapsackBU {
         String weight = null;
         String value = null;
         int debugLevel = 0;
-
 
         if (args.length > 3 && args.length < 6) {
             numItems = Integer.parseInt(args[0]);
@@ -71,7 +71,6 @@ public class KnapsackBU {
 //
 //        }
 
-        System.out.println(" ");
 
 //        System.out.println(result)
         table = sackBU(numItems, wArray, vArray, maxWeight);
@@ -79,7 +78,7 @@ public class KnapsackBU {
         int[][] arr = sackFind(numItems, wArray, vArray, maxWeight,table);
 
         if(debugLevel == 1){
-
+            System.out.println("KnapsackDP-VTable:" + "");
             for(int i = 0; i < table.length; i++){
                 for(int j = 0; j < table[0].length;j++){
                     System.out.print(table[i][j]+" ");
@@ -97,26 +96,28 @@ public class KnapsackBU {
                 }
                 System.out.println();
             }
-
-
         }
 
         System.out.println("Optimal solution:" + "\n" + list);
         System.out.println("Total Weight: "+ maxWeight);
         System.out.println("Optimal Value: " + optVal);
-        System.out.println("Number of table references: ");
+        System.out.println("Number of table references: " + ref);
 
-        System.out.println("********done**********");
+
 
     }
     private static int[][] sackBU(int n, int[] w, int[]v, int maxSize){
         int[][] temp= new int [n+1][maxSize+1];
         for(int i=1; i<=n;i++){
+            ref++;
             for(int c =1; c<=maxSize; c++){
+                ref++;
                 if(w[i-1] >c ){
                     temp[i][c] = temp[i-1][c];
+
                 }else {
                     temp[i][c] = Math.max(temp[i-1][c],v[i-1]+temp[i-1][c-w[i-1]]);
+
                 }
             }
         }
@@ -127,7 +128,6 @@ public class KnapsackBU {
          int[][] findArr =  new int [n+1][maxSize+1];
         int i = n;
         int j = maxSize;
-        System.out.println("");
 //
 //        for(int x = 0; x < arr.length; x++){
 //            for(int y = 0; y< arr[0].length;y++){
