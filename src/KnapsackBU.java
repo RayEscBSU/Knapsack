@@ -109,13 +109,14 @@ public class KnapsackBU {
     private static int[][] sackBU(int n, int[] w, int[]v, int maxSize){
         int[][] temp= new int [n+1][maxSize+1];
         for(int i=1; i<=n;i++){
-            ref++;
+
             for(int c =1; c<=maxSize; c++){
-                ref++;
                 if(w[i-1] >c ){
+                    ref++;
                     temp[i][c] = temp[i-1][c];
 
                 }else {
+                    ref+=2;
                     temp[i][c] = Math.max(temp[i-1][c],v[i-1]+temp[i-1][c-w[i-1]]);
 
                 }
