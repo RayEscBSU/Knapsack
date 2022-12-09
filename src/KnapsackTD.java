@@ -105,12 +105,16 @@ public class KnapsackTD {
 
     private static int cal(int row, int col, int[] v, int[]w, int[][]finTable){
         if(finTable[row][col] >= 0){
+            ref++;
             return finTable[row][col];
+
         }
         if (w[row-1] > col) {
             finTable[row][col] = cal(row-1, col, v, w, finTable);
+            ref++;
         }
         else {
+            ref++;
             finTable[row][col] = Math.max(cal(row-1, col, v, w, finTable), v[row-1] + cal(row-1, col-w[row-1], v, w, finTable));
         }
 
@@ -122,8 +126,10 @@ public class KnapsackTD {
         for (int i = 1; i <= n; i++) {
             for (int c = 1; c <= maxSize; c++) {
                 if (w[i - 1] > c) {
+
                     temp[i][c] = temp[i - 1][c];
                 } else {
+
                     temp[i][c] = Math.max(temp[i - 1][c], v[i - 1] + temp[i - 1][c - w[i - 1]]);
                 }
             }
