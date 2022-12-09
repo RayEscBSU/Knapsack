@@ -8,17 +8,17 @@ public class KnapsackTD {
     private static File wFile;
     private static File vFile;
     private static int lineCount;
-
+    private static int maxWeight;
     private static int optVal;
     private static int ref;
 
     private static int[][] table;
-    private static int[][] fTable;
+    private static int[][] dTable;
     private static ArrayList<Integer> list = new ArrayList<>();
 
     public static void main(String[] args) {
         int numItems = 0;
-        int maxWeight = 0;
+        maxWeight = 0;
         String weight = null;
         String value = null;
         int debugLevel = 0;
@@ -53,6 +53,8 @@ public class KnapsackTD {
 
         wFile = new File(weight);
         vFile = new File(value);
+        String v= "KnapsackTD-VTable";
+        String d= "KnapsackTD-DTable";
 
         try {
             compareFiles(wFile, vFile);
@@ -63,9 +65,10 @@ public class KnapsackTD {
 
          table =  sackTD(numItems,wArray,vArray,maxWeight );
         optVal = table[table.length - 1][table[table.length-1].length - 1];
-        int[][] arr = sackFind(numItems, wArray, vArray,maxWeight,table);
+         dTable = sackFind(numItems, wArray, vArray,maxWeight,table);
 
         if(debugLevel == 1){
+            writeToFile(v,table);
             System.out.println("KnapsackDP-VTable:" + "");
             for(int i = 0; i < table.length; i++){
                 for(int j = 0; j < table[0].length;j++){
@@ -73,12 +76,12 @@ public class KnapsackTD {
                 }
                 System.out.println();
             }
-
+            writeToFile(d,dTable);
             System.out.println("\n" + "KnapsackDP-DTable:" +"");
             //DTable
-            for(int x = 0; x < arr.length; x++){
-                for(int y = 0; y< arr[0].length;y++){
-                    System.out.print(arr[x][y]+" ");
+            for(int x = 0; x < dTable.length; x++){
+                for(int y = 0; y< dTable[0].length;y++){
+                    System.out.print(dTable[x][y]+" ");
                 }
                 System.out.println();
             }
@@ -90,7 +93,6 @@ public class KnapsackTD {
         System.out.println("Number of table references: " + ref);
 
     }
-
 
     private static int[][] sackTD(int n, int[] w, int[] v,int maxSize) {
         int[][] newArr = new int[n+1][maxSize+1];
@@ -120,24 +122,6 @@ public class KnapsackTD {
 
         return finTable[row][col];
     }
-
-    private static int[][] sackBU(int n, int[] w, int[] v, int maxSize) {
-        int[][] temp = new int[n + 1][maxSize + 1];
-        for (int i = 1; i <= n; i++) {
-            for (int c = 1; c <= maxSize; c++) {
-                if (w[i - 1] > c) {
-
-                    temp[i][c] = temp[i - 1][c];
-                } else {
-
-                    temp[i][c] = Math.max(temp[i - 1][c], v[i - 1] + temp[i - 1][c - w[i - 1]]);
-                }
-            }
-        }
-
-        return temp;
-    }
-
     private static int[][] sackFind(int n, int[] w, int[] v, int maxSize, int[][] arr) {
         int[][] findArr = new int[n + 1][maxSize + 1];
         int i = n;
@@ -209,6 +193,26 @@ public class KnapsackTD {
             throw new RuntimeException(e);
         }
         return c;
+    }
+    private static void writeToFile(String fileName, int [][] arr){
+        PrintWriter outPut;
+        try {
+            outPut = new PrintWriter(fileName);
+            outPut.println("KnapsackDP-VTable:" + "\n");
+            for(int i = 0; i < arr.length; i++){
+                for(int j = 0; j < arr[0].length;j++){
+                    outPut.print(arr[i][j]+" ");
+                }
+                outPut.println(" ");
+            }
+            outPut.println("\n" + "Optimal solution:" + "\n" + list);
+            outPut.println("Total Weight: "+ maxWeight);
+            outPut.println("Optimal Value: " + optVal);
+            outPut.println("Number of table references: " + ref +"\n");
+            outPut.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

@@ -10,19 +10,22 @@ public class KnapsackBU {
     private static File wFile;
     private static File vFile;
     private static int lineCount;
+    private static int maxWeight;
 
     private static int optVal;
     private static int ref;
 
     private static int [][] table;
+    private static int [][] dTable;
     private static ArrayList<Integer> list= new ArrayList<>();
 
     public static void main(String[] args) {
         int numItems = 0;
-        int maxWeight = 0;
+        maxWeight = 0;
         String weight = null;
         String value = null;
         int debugLevel = 0;
+
 
         if (args.length > 3 && args.length < 6) {
             numItems = Integer.parseInt(args[0]);
@@ -53,6 +56,9 @@ public class KnapsackBU {
 
         wFile = new File(weight);
         vFile = new File(value);
+        String v= "KnapsackBU-VTable";
+        String d= "KnapsackBU-DTable";
+
 
         try {
             compareFiles(wFile, vFile);
@@ -60,24 +66,12 @@ public class KnapsackBU {
             throw new RuntimeException(e);
         }
 
-//        //print out array
-//        for (int i = 0; i < lineCount; i++) {
-//            System.out.print(wArray[i] + " ");
-//
-//        }
-//        System.out.println("");
-//        for (int i = 0; i < lineCount; i++) {
-//            System.out.print(vArray[i] + " ");;
-//
-//        }
-
-
-//        System.out.println(result)
         table = sackBU(numItems, wArray, vArray, maxWeight);
         optVal = table[table.length - 1][table[table.length-1].length - 1];
-        int[][] arr = sackFind(numItems, wArray, vArray, maxWeight,table);
+        dTable = sackFind(numItems, wArray, vArray, maxWeight,table);
 
         if(debugLevel == 1){
+            writeToFile(v,table);
             System.out.println("KnapsackDP-VTable:" + "");
             for(int i = 0; i < table.length; i++){
                 for(int j = 0; j < table[0].length;j++){
@@ -85,17 +79,16 @@ public class KnapsackBU {
                 }
                 System.out.println();
             }
-
-
+            writeToFile(d,dTable);
             System.out.println("\n" + "KnapsackDP-DTable:" +"");
-
             //DTable
-            for(int x = 0; x < arr.length; x++){
-                for(int y = 0; y< arr[0].length;y++){
-                    System.out.print(arr[x][y]+" ");
+            for(int x = 0; x < dTable.length; x++){
+                for(int y = 0; y< dTable[0].length;y++){
+                    System.out.print(dTable[x][y]+" ");
                 }
                 System.out.println();
             }
+
         }
 
         System.out.println("Optimal solution:" + "\n" + list);
@@ -129,19 +122,12 @@ public class KnapsackBU {
          int[][] findArr =  new int [n+1][maxSize+1];
         int i = n;
         int j = maxSize;
-//
-//        for(int x = 0; x < arr.length; x++){
-//            for(int y = 0; y< arr[0].length;y++){
-//                System.out.print(arr[i][j]+" ");
-//            }
-//            System.out.println();
-//        }
         while(i >0 && j > 0 ){
             if(arr[i][j] != arr[i-1][j]){
                 findArr[i][j] = 1;
                 list.add(i);
                 i = i-1;
-                j=j-w[i];
+                    j=j-w[i];
             }
             else {
                 i=i-1;
@@ -203,4 +189,25 @@ public class KnapsackBU {
         }
         return c;
     }
+    private static void writeToFile(String fileName, int [][] arr){
+        PrintWriter outPut;
+        try {
+            outPut = new PrintWriter(fileName);
+            outPut.println("KnapsackDP-VTable:" + "\n");
+            for(int i = 0; i < arr.length; i++){
+                for(int j = 0; j < arr[0].length;j++){
+                    outPut.print(arr[i][j]+" ");
+                }
+                    outPut.println(" ");
+            }
+            outPut.println("\n" + "Optimal solution:" + "\n" + list);
+            outPut.println("Total Weight: "+ maxWeight);
+            outPut.println("Optimal Value: " + optVal);
+            outPut.println("Number of table references: " + ref +"\n");
+            outPut.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
