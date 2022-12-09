@@ -49,12 +49,11 @@ public class KnapsackTD {
 
         wArray = new int[numItems];
         vArray = new int[numItems];
-        int lines;
 
         wFile = new File(weight);
         vFile = new File(value);
-        String v= "KnapsackTD-VTable";
-        String d= "KnapsackTD-DTable";
+        String v= "KnapsackTD-VTable.txt";
+        String d= "KnapsackTD-DTable.txt";
 
         try {
             compareFiles(wFile, vFile);
@@ -109,7 +108,6 @@ public class KnapsackTD {
         if(finTable[row][col] >= 0){
             ref++;
             return finTable[row][col];
-
         }
         if (w[row-1] > col) {
             finTable[row][col] = cal(row-1, col, v, w, finTable);

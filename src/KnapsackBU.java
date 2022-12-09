@@ -56,8 +56,8 @@ public class KnapsackBU {
 
         wFile = new File(weight);
         vFile = new File(value);
-        String v= "KnapsackBU-VTable";
-        String d= "KnapsackBU-DTable";
+        String v= "KnapsackBU-VTable.txt";
+        String d= "KnapsackBU-DTable.txt";
 
 
         try {
